@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'Features/To Do/Presentation/Views/home_screen.dart';
 
@@ -12,11 +13,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.dark,
-      home: const HomeScreen(),
-    );
+    return ScreenUtilInit(
+        designSize: const Size(360, 690),
+        builder: (context, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            darkTheme: ThemeData.dark(),
+            themeMode: ThemeMode.dark,
+            home: const HomeScreen(),
+          );
+        });
   }
 }

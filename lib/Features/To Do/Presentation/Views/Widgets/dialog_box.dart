@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'custom_button.dart';
@@ -17,8 +18,9 @@ class DialogBox extends StatelessWidget {
     return AlertDialog(
       // backgroundColor: Colors.purple[400],
       content: SizedBox(
-        height: 120,
+        height: 120.h,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             TextField(

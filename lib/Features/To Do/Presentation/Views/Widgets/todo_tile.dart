@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,7 +20,7 @@ class ToDoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 25.0, left: 25, right: 25),
+      padding: EdgeInsets.only(top: 25.0.h, left: 25.w, right: 25.w),
       child: Slidable(
         endActionPane: ActionPane(
           motion: const ScrollMotion(),
@@ -28,7 +29,7 @@ class ToDoTile extends StatelessWidget {
               onPressed: deleteFunction,
               icon: Icons.delete,
               backgroundColor: Colors.red.shade300,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             )
           ],
         ),
@@ -36,7 +37,7 @@ class ToDoTile extends StatelessWidget {
           padding: const EdgeInsets.all(25),
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
           child: Row(
             children: [
@@ -44,15 +45,15 @@ class ToDoTile extends StatelessWidget {
                   checkColor: Colors.white,
                   value: isComplated,
                   onChanged: onChange),
-              const SizedBox(
-                width: 10,
+              SizedBox(
+                width: 10.w,
               ),
               Text(
                 taskName,
                 style: GoogleFonts.roboto(
                   color: Colors.white,
                   fontWeight: isComplated ? FontWeight.bold : FontWeight.normal,
-                  fontSize: 18,
+                  fontSize: 18.sp,
                   decoration: isComplated
                       ? TextDecoration.lineThrough
                       : TextDecoration.none,
