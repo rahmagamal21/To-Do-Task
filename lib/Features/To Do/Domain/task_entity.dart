@@ -22,4 +22,13 @@ class TaskEntity {
       userId: userId,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'todo': todo,
+      'completed': completed,
+      'userId': userId,
+    };
+  }
 }

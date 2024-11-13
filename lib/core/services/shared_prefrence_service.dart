@@ -30,3 +30,36 @@
 //     await prefs.remove('task_list');
 //   }
 // }
+import 'dart:convert';
+import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:to_do_task/Features/To%20Do/Domain/task_entity.dart';
+
+import '../../Features/To Do/Data/model/task_model.dart';
+
+@injectable
+class SharedPreferencesService {
+  static const String taskKey = 'tasks';
+
+  Future<void> saveTasks(List<TaskEntity> tasks) async {
+    final prefs = await SharedPreferences.getInstance();
+    final tasksJson = tasks.map((task) => jsonEncode(task.toJson())).toList();
+    await prefs.setStringList(taskKey, tasksJson);
+  }
+
+  Future<List<TaskModel>> getTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    final tasksJson = prefs.getStringList(taskKey);
+    if (tasksJson != null) {
+      return tasksJson
+          .map((task) => TaskModel.fromJson(jsonDecode(task)))
+          .toList();
+    }
+    return [];
+  }
+
+  Future<void> clearTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(taskKey);
+  }
+}

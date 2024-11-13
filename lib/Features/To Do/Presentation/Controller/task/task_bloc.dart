@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../../core/services/shared_prefrence_service.dart';
 import '../../../Domain/use_cases.dart';
 import '../../../Domain/task_entity.dart';
 
@@ -19,12 +20,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final UpdateTaskUseCase updateTask;
   final DeleteTaskUseCase deleteTask;
   final TextEditingController controller = TextEditingController();
-  // final SharedPreferencesService sharedPreferencesService;
+  final SharedPreferencesService sharedPreferencesService;
   TaskBloc(
     this.getTasks,
     this.addTask,
     this.updateTask,
     this.deleteTask,
+    this.sharedPreferencesService,
     // this.sharedPreferencesService
   ) : super(const TaskState.initial()) {
     on<FetchTasks>(_onFetchTasks);
@@ -34,20 +36,30 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   }
   Future<void> _onFetchTasks(FetchTasks event, Emitter<TaskState> emit) async {
     emit(const TaskState.taskLoading());
+    // try {
+    //   final tasks = await getTasks();
+    //   emit(TaskState.taskLoaded(tasks));
+    //   // final tasksFromCache = await sharedPreferencesService.getTasks();
+    //   // if (tasksFromCache.isNotEmpty) {
+    //   //   emit(TaskState.taskLoaded(tasksFromCache));
+    //   // } else {
+    //   //   final tasksFromServer = await getTasks();
+    //   //   emit(TaskState.taskLoaded(tasksFromServer));
+    //   //   await sharedPreferencesService.saveTasks(tasksFromServer);
+    //   // }
+    // } catch (e) {
+    //   emit(TaskState.taskFailure(e.toString()));
+    //   log(e.toString());
+    // }
     try {
-      final tasks = await getTasks();
-      emit(TaskState.taskLoaded(tasks));
-      // final tasksFromCache = await sharedPreferencesService.getTasks();
-      // if (tasksFromCache.isNotEmpty) {
-      //   emit(TaskState.taskLoaded(tasksFromCache));
-      // } else {
-      //   final tasksFromServer = await getTasks();
-      //   emit(TaskState.taskLoaded(tasksFromServer));
-      //   await sharedPreferencesService.saveTasks(tasksFromServer);
-      // }
+      final tasksFromServer = await getTasks();
+      emit(TaskState.taskLoaded(tasksFromServer));
+      await sharedPreferencesService.saveTasks(tasksFromServer);
     } catch (e) {
-      emit(TaskState.taskFailure(e.toString()));
       log(e.toString());
+      // Load tasks from SharedPreferences if API call fails
+      final cachedTasks = await sharedPreferencesService.getTasks();
+      emit(TaskState.taskLoaded(cachedTasks));
     }
   }
 
@@ -61,6 +73,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         // await sharedPreferencesService.saveTasks(updatedTasks);
 
         emit(TaskState.taskLoaded(updatedTasks));
+        await sharedPreferencesService.saveTasks(updatedTasks);
 
         controller.clear();
 
@@ -89,8 +102,9 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         }).toList();
         //check
         // await sharedPreferencesService.saveTasks(updatedTasks);
-        log("Updated Tasks: $updatedTasks");
+
         emit(TaskState.taskLoaded(updatedTasks));
+        await sharedPreferencesService.saveTasks(updatedTasks);
       } catch (e) {
         emit(TaskState.taskFailure(e.toString()));
       }
@@ -108,6 +122,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         // await sharedPreferencesService.saveTasks(updatedTasks);
 
         emit(TaskState.taskLoaded(updatedTasks));
+        await sharedPreferencesService.saveTasks(updatedTasks);
       } catch (e) {
         emit(TaskState.taskFailure(e.toString()));
       }
