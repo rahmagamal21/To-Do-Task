@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -52,14 +53,19 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     //   log(e.toString());
     // }
     try {
-      final tasksFromServer = await getTasks();
-      emit(TaskState.taskLoaded(tasksFromServer));
-      await sharedPreferencesService.saveTasks(tasksFromServer);
+      final cachedTasks = await sharedPreferencesService.getTasks();
+      if (cachedTasks.isNotEmpty) {
+        emit(TaskState.taskLoaded(
+            cachedTasks.map((task) => task.toEntity()).toList()));
+      } else {
+        final tasksFromServer = await getTasks();
+        emit(TaskState.taskLoaded(tasksFromServer));
+        await sharedPreferencesService.saveTasks(tasksFromServer);
+      }
     } catch (e) {
       log(e.toString());
-      // Load tasks from SharedPreferences if API call fails
-      final cachedTasks = await sharedPreferencesService.getTasks();
-      emit(TaskState.taskLoaded(cachedTasks));
+
+      emit(TaskState.taskFailure(e.toString()));
     }
   }
 
@@ -70,7 +76,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         final newTask = await addTask(controller.text, false);
 
         final updatedTasks = List<TaskEntity>.from(currentTasks)..add(newTask);
-        // await sharedPreferencesService.saveTasks(updatedTasks);
 
         emit(TaskState.taskLoaded(updatedTasks));
         await sharedPreferencesService.saveTasks(updatedTasks);
@@ -92,21 +97,28 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   Future<void> _onUpdateTask(UpdateTask event, Emitter<TaskState> emit) async {
     if (state is TaskLoaded) {
       try {
-        await updateTask(event.id, event.completed);
-
+        // Update the local list first
         final updatedTasks = (state as TaskLoaded).tasks.map((task) {
           if (task.id == event.id) {
             return task.copyWith(completed: event.completed);
           }
           return task;
         }).toList();
-        //check
-        // await sharedPreferencesService.saveTasks(updatedTasks);
 
-        emit(TaskState.taskLoaded(updatedTasks));
+        // Emit the updated state immediately to show changes on the UI
         await sharedPreferencesService.saveTasks(updatedTasks);
+        emit(TaskState.taskLoaded(updatedTasks));
+
+        // Attempt to update on the server
+        await updateTask(event.id, event.completed);
       } catch (e) {
-        emit(TaskState.taskFailure(e.toString()));
+        // If the error is due to a 404, log it silently without impacting the UI
+        if (e is DioException && e.response?.statusCode == 404) {
+          log("Task update failed on server with 404: ${e.message}");
+        } else {
+          // For other errors, emit failure state to the UI
+          emit(TaskState.taskFailure(e.toString()));
+        }
       }
     }
   }
@@ -114,17 +126,26 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   Future<void> _onDeleteTask(DeleteTask event, Emitter<TaskState> emit) async {
     if (state is TaskLoaded) {
       try {
-        await deleteTask(event.id);
+        // Update the local list by removing the task immediately
         final updatedTasks = (state as TaskLoaded)
             .tasks
             .where((task) => task.id != event.id)
             .toList();
-        // await sharedPreferencesService.saveTasks(updatedTasks);
 
+        // Emit the updated state immediately to show changes on the UI
         emit(TaskState.taskLoaded(updatedTasks));
+
+        // Attempt to delete from the server
         await sharedPreferencesService.saveTasks(updatedTasks);
+        await deleteTask(event.id);
       } catch (e) {
-        emit(TaskState.taskFailure(e.toString()));
+        // If the error is due to a 404, log it silently without impacting the UI
+        if (e is DioException && e.response?.statusCode == 404) {
+          log("Task deletion failed on server with 404: ${e.message}");
+        } else {
+          // For other errors, emit failure state to the UI
+          emit(TaskState.taskFailure(e.toString()));
+        }
       }
     }
   }
