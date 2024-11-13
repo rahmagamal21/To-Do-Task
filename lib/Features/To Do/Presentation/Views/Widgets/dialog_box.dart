@@ -17,38 +17,45 @@ class DialogBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       // backgroundColor: Colors.purple[400],
-      content: SizedBox(
-        height: 120.h,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            TextField(
-              controller: controller,
-              decoration: InputDecoration(
-                hintText: "Task Name",
-                hintStyle: GoogleFonts.roboto(color: Colors.grey[200]),
-                border: const OutlineInputBorder(),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.of(context).orientation == Orientation.landscape
+              ? MediaQuery.of(context).size.height * 0.5
+              : 120.h,
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              TextField(
+                controller: controller,
+                decoration: InputDecoration(
+                  hintText: "Task Name",
+                  hintStyle: GoogleFonts.roboto(color: Colors.grey[200]),
+                  border: const OutlineInputBorder(),
+                ),
+                style: GoogleFonts.roboto(color: Colors.white),
               ),
-              style: GoogleFonts.roboto(color: Colors.white),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomButton(
-                  text: 'Add Task',
-                  onClick: onSave,
+              SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomButton(
+                      text: 'Add Task',
+                      onClick: onSave,
+                    ),
+                    // const SizedBox(
+                    //   width: 5,
+                    // ),
+                    CustomButton(
+                      text: 'Cancel',
+                      onClick: onCancel,
+                    ),
+                  ],
                 ),
-                // const SizedBox(
-                //   width: 5,
-                // ),
-                CustomButton(
-                  text: 'Cancel',
-                  onClick: onCancel,
-                ),
-              ],
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
