@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:to_do_task/Features/To%20Do/Presentation/Controller/task/task_bloc.dart';
 
 import 'Widgets/dialog_box.dart';
 import 'Widgets/todo_tile.dart';
@@ -9,25 +11,15 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> title = [
-      'Feed my cat',
-      'Having breakfast',
-      'Do Sports',
-      'Taking shower'
-    ];
-    final List<bool> isCompleted = [true, true, false, false];
-
-    final TextEditingController controller = TextEditingController();
-
-    void checkBoxChange({required bool? value, required int index}) {}
-
     void saveNewTask() {
-      {}
+      context.read<TaskBloc>().add(const AddTask());
+
+      Navigator.of(context).pop();
     }
 
     void cancelNewTask() {
       {
-        controller.clear();
+        BlocProvider.of<TaskBloc>(context).controller.clear();
         Navigator.of(context).pop();
       }
     }
@@ -36,14 +28,14 @@ class HomeScreen extends StatelessWidget {
       showDialog(
         context: context,
         builder: (context) => DialogBox(
-          controller: controller,
+          controller: BlocProvider.of<TaskBloc>(context).controller,
           onSave: saveNewTask,
           onCancel: cancelNewTask,
         ),
       );
     }
 
-    void deleteTask(int index) {}
+    //void deleteTask(int index) {}
     return Scaffold(
       // backgroundColor: Colors.purple[200],
       appBar: AppBar(
@@ -59,19 +51,34 @@ class HomeScreen extends StatelessWidget {
         onPressed: addNewTask,
         child: const Icon(Icons.add),
       ),
-      body: ListView.builder(
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          return ToDoTile(
-            taskName: title[index],
-            isComplated: isCompleted[index],
-            onChange: (value) {
-              checkBoxChange(index: index, value: value);
-            },
-            deleteFunction: (ctx) {
-              deleteTask(index);
-            },
-          );
+      body: BlocBuilder<TaskBloc, TaskState>(
+        builder: (context, state) {
+          if (state is TaskLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is TaskLoaded) {
+            return ListView.builder(
+              itemCount: state.tasks.length,
+              itemBuilder: (context, index) {
+                final task = state.tasks[index];
+                return ToDoTile(
+                  taskName: task.name,
+                  isComplated: task.completed,
+                  onChange: (value) {
+                    context.read<TaskBloc>().add(
+                          UpdateTask(task.id, value!),
+                        );
+                  },
+                  deleteFunction: (ctx) {
+                    context.read<TaskBloc>().add(DeleteTask(task.id));
+                  },
+                );
+              },
+            );
+          } else if (state is TaskFailure) {
+            return Center(child: Text("Error: ${state.message}"));
+          } else {
+            return const Center(child: Text("No tasks available."));
+          }
         },
       ),
     );
