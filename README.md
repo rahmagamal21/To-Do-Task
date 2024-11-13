@@ -1,9 +1,11 @@
 # to_do_task
 
-Project Overview
+## Project Overview
+
 This Flutter project is a to-do list application with a focus on responsive design and clean architecture principles. It uses BLoC for state management, Dio for HTTP requests, Retrofit for API integration, and follows a layered structure to separate concerns.
 
-Key Features:
+## Key Features:
+
 Add a Task: Users can add tasks with a dialog input.
 Update Task: Tasks can be marked as complete or incomplete.
 Delete Task: Tasks can be deleted with a swipe gesture.
