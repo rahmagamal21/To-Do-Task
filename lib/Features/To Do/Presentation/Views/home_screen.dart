@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void saveNewTask() {
-      context.read<TaskBloc>().add(const AddTask());
+      context.read<TaskBloc>().add(AddTask(context));
 
       Navigator.of(context).pop();
     }
@@ -35,7 +37,6 @@ class HomeScreen extends StatelessWidget {
       );
     }
 
-    //void deleteTask(int index) {}
     return Scaffold(
       // backgroundColor: Colors.purple[200],
       appBar: AppBar(
@@ -56,12 +57,13 @@ class HomeScreen extends StatelessWidget {
           if (state is TaskLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is TaskLoaded) {
+            final tasks = state.tasks;
             return ListView.builder(
-              itemCount: state.tasks.length,
+              itemCount: tasks.length,
               itemBuilder: (context, index) {
-                final task = state.tasks[index];
+                final task = tasks[index];
                 return ToDoTile(
-                  taskName: task.name,
+                  taskName: task.todo,
                   isComplated: task.completed,
                   onChange: (value) {
                     context.read<TaskBloc>().add(
@@ -75,6 +77,7 @@ class HomeScreen extends StatelessWidget {
               },
             );
           } else if (state is TaskFailure) {
+            log(state.message);
             return Center(child: Text("Error: ${state.message}"));
           } else {
             return const Center(child: Text("No tasks available."));

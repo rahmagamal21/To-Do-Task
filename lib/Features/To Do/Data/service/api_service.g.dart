@@ -24,12 +24,12 @@ class _ApiService implements ApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<List<TaskModel>> getTasks() async {
+  Future<TaskResponse> getTasks() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<TaskModel>>(Options(
+    final _options = _setStreamType<TaskResponse>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -45,12 +45,10 @@ class _ApiService implements ApiService {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<TaskModel> _value;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late TaskResponse _value;
     try {
-      _value = _result.data!
-          .map((dynamic i) => TaskModel.fromJson(i as Map<String, dynamic>))
-          .toList();
+      _value = TaskResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

@@ -38,33 +38,63 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   }
 
   Future<void> _onAddTask(AddTask event, Emitter<TaskState> emit) async {
-    emit(const TaskLoading());
-    try {
-      await addTask(controller.text);
-      add(const FetchTasks());
-      controller.clear();
-    } catch (e) {
-      emit(TaskFailure(e.toString()));
+    if (state is TaskLoaded) {
+      final currentTasks = (state as TaskLoaded).tasks;
+      try {
+        final newTask = await addTask(controller.text, false);
+
+        final updatedTasks = List<TaskEntity>.from(currentTasks)..add(newTask);
+
+        emit(TaskState.taskLoaded(updatedTasks));
+
+        controller.clear();
+
+        ScaffoldMessenger.of(event.context).showSnackBar(
+          const SnackBar(
+            content: Text('Task successfully added!'),
+            backgroundColor: Color.fromARGB(255, 223, 174, 231),
+          ),
+        );
+      } catch (e) {
+        emit(TaskState.taskFailure(e.toString()));
+      }
     }
   }
 
   Future<void> _onUpdateTask(UpdateTask event, Emitter<TaskState> emit) async {
-    emit(const TaskLoading());
-    try {
-      await updateTask(event.id, event.completed);
-      add(const FetchTasks());
-    } catch (e) {
-      emit(TaskFailure(e.toString()));
+    if (state is TaskLoaded) {
+      try {
+      
+        await updateTask(event.id, event.completed);
+
+
+        final updatedTasks = (state as TaskLoaded).tasks.map((task) {
+          if (task.id == event.id) {
+            return task.copyWith(completed: event.completed);
+          }
+          return task;
+        }).toList();
+        log("Updated Tasks: $updatedTasks");
+        emit(TaskState.taskLoaded(updatedTasks));
+      } catch (e) {
+        emit(TaskState.taskFailure(e.toString()));
+      }
     }
   }
 
   Future<void> _onDeleteTask(DeleteTask event, Emitter<TaskState> emit) async {
-    emit(const TaskLoading());
-    try {
-      await deleteTask(event.id);
-      add(const FetchTasks());
-    } catch (e) {
-      emit(TaskFailure(e.toString()));
+    if (state is TaskLoaded) {
+      try {
+        await deleteTask(event.id);
+        final updatedTasks = (state as TaskLoaded)
+            .tasks
+            .where((task) => task.id != event.id)
+            .toList();
+
+        emit(TaskState.taskLoaded(updatedTasks));
+      } catch (e) {
+        emit(TaskState.taskFailure(e.toString()));
+      }
     }
   }
 }

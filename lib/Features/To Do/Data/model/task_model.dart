@@ -6,17 +6,16 @@ part 'task_model.g.dart';
 
 @JsonSerializable()
 class TaskModel extends TaskEntity {
-  // Use super constructor for inherited fields
   TaskModel({
     required super.id,
-    required super.name,
+    required super.todo,
     required super.completed,
+    required super.userId,
   });
   TaskEntity toEntity() {
-    return TaskEntity(id: id, name: name, completed: completed);
+    return TaskEntity(id: id, todo: todo, completed: completed, userId: userId);
   }
 
-  // JSON serialization methods
   factory TaskModel.fromJson(Map<String, dynamic> json) =>
       _$TaskModelFromJson(json);
   Map<String, dynamic> toJson() => _$TaskModelToJson(this);

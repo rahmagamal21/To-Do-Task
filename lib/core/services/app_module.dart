@@ -6,7 +6,6 @@ import '../../Features/To Do/Data/repository/task_repository_impl.dart';
 
 @module
 abstract class RegisterModule {
-  // Dio setup
   @singleton
   Dio get dio {
     final dio = Dio();

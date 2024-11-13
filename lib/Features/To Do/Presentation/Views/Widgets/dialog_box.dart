@@ -36,7 +36,7 @@ class DialogBox extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CustomButton(
-                  text: 'Add Taks',
+                  text: 'Add Task',
                   onClick: onSave,
                 ),
                 // const SizedBox(

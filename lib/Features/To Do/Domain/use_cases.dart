@@ -15,8 +15,8 @@ class GetTasksUseCase {
 
 @injectable
 class AddTaskUseCase {
-  Future<void> call(String task) {
-    return repository.addTask(task, false);
+  Future<TaskEntity> call(String task, bool completed) {
+    return repository.addTask(task, completed);
   }
 }
 

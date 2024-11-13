@@ -48,15 +48,20 @@ class ToDoTile extends StatelessWidget {
               SizedBox(
                 width: 10.w,
               ),
-              Text(
-                taskName,
-                style: GoogleFonts.roboto(
-                  color: Colors.white,
-                  fontWeight: isComplated ? FontWeight.bold : FontWeight.normal,
-                  fontSize: 18.sp,
-                  decoration: isComplated
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none,
+              Flexible(
+                child: Text(
+                  softWrap: true,
+                  overflow: TextOverflow.visible,
+                  taskName,
+                  style: GoogleFonts.roboto(
+                    color: Colors.white,
+                    fontWeight:
+                        isComplated ? FontWeight.bold : FontWeight.normal,
+                    fontSize: 18.sp,
+                    decoration: isComplated
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                  ),
                 ),
               ),
             ],
