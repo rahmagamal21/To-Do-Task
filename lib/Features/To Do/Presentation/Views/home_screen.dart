@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:to_do_task/Features/To%20Do/Presentation/Controller/task/task_bloc.dart';
 
@@ -40,13 +41,26 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       // backgroundColor: Colors.purple[200],
       appBar: AppBar(
-        title: Center(
-          child: Text(
-            "To Do List",
-            style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+        title: Text(
+          "To Do List",
+          style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(50.h),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: TextField(
+              controller: context.read<TaskBloc>().searchController,
+              decoration: const InputDecoration(
+                hintText: 'Search tasks...',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+              ),
+            ),
           ),
         ),
-        elevation: 0,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: addNewTask,

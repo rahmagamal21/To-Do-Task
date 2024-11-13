@@ -640,6 +640,7 @@ mixin _$TaskEvent {
     required TResult Function(BuildContext context) addTask,
     required TResult Function(int id, bool completed) updateTask,
     required TResult Function(int id) deleteTask,
+    required TResult Function(String query) searchTasks,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -648,6 +649,7 @@ mixin _$TaskEvent {
     TResult? Function(BuildContext context)? addTask,
     TResult? Function(int id, bool completed)? updateTask,
     TResult? Function(int id)? deleteTask,
+    TResult? Function(String query)? searchTasks,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -656,6 +658,7 @@ mixin _$TaskEvent {
     TResult Function(BuildContext context)? addTask,
     TResult Function(int id, bool completed)? updateTask,
     TResult Function(int id)? deleteTask,
+    TResult Function(String query)? searchTasks,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -665,6 +668,7 @@ mixin _$TaskEvent {
     required TResult Function(AddTask value) addTask,
     required TResult Function(UpdateTask value) updateTask,
     required TResult Function(DeleteTask value) deleteTask,
+    required TResult Function(SearchTasks value) searchTasks,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -673,6 +677,7 @@ mixin _$TaskEvent {
     TResult? Function(AddTask value)? addTask,
     TResult? Function(UpdateTask value)? updateTask,
     TResult? Function(DeleteTask value)? deleteTask,
+    TResult? Function(SearchTasks value)? searchTasks,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -681,6 +686,7 @@ mixin _$TaskEvent {
     TResult Function(AddTask value)? addTask,
     TResult Function(UpdateTask value)? updateTask,
     TResult Function(DeleteTask value)? deleteTask,
+    TResult Function(SearchTasks value)? searchTasks,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -751,6 +757,7 @@ class _$FetchTasksImpl implements FetchTasks {
     required TResult Function(BuildContext context) addTask,
     required TResult Function(int id, bool completed) updateTask,
     required TResult Function(int id) deleteTask,
+    required TResult Function(String query) searchTasks,
   }) {
     return fetchTasks();
   }
@@ -762,6 +769,7 @@ class _$FetchTasksImpl implements FetchTasks {
     TResult? Function(BuildContext context)? addTask,
     TResult? Function(int id, bool completed)? updateTask,
     TResult? Function(int id)? deleteTask,
+    TResult? Function(String query)? searchTasks,
   }) {
     return fetchTasks?.call();
   }
@@ -773,6 +781,7 @@ class _$FetchTasksImpl implements FetchTasks {
     TResult Function(BuildContext context)? addTask,
     TResult Function(int id, bool completed)? updateTask,
     TResult Function(int id)? deleteTask,
+    TResult Function(String query)? searchTasks,
     required TResult orElse(),
   }) {
     if (fetchTasks != null) {
@@ -788,6 +797,7 @@ class _$FetchTasksImpl implements FetchTasks {
     required TResult Function(AddTask value) addTask,
     required TResult Function(UpdateTask value) updateTask,
     required TResult Function(DeleteTask value) deleteTask,
+    required TResult Function(SearchTasks value) searchTasks,
   }) {
     return fetchTasks(this);
   }
@@ -799,6 +809,7 @@ class _$FetchTasksImpl implements FetchTasks {
     TResult? Function(AddTask value)? addTask,
     TResult? Function(UpdateTask value)? updateTask,
     TResult? Function(DeleteTask value)? deleteTask,
+    TResult? Function(SearchTasks value)? searchTasks,
   }) {
     return fetchTasks?.call(this);
   }
@@ -810,6 +821,7 @@ class _$FetchTasksImpl implements FetchTasks {
     TResult Function(AddTask value)? addTask,
     TResult Function(UpdateTask value)? updateTask,
     TResult Function(DeleteTask value)? deleteTask,
+    TResult Function(SearchTasks value)? searchTasks,
     required TResult orElse(),
   }) {
     if (fetchTasks != null) {
@@ -895,6 +907,7 @@ class _$AddTaskImpl implements AddTask {
     required TResult Function(BuildContext context) addTask,
     required TResult Function(int id, bool completed) updateTask,
     required TResult Function(int id) deleteTask,
+    required TResult Function(String query) searchTasks,
   }) {
     return addTask(context);
   }
@@ -906,6 +919,7 @@ class _$AddTaskImpl implements AddTask {
     TResult? Function(BuildContext context)? addTask,
     TResult? Function(int id, bool completed)? updateTask,
     TResult? Function(int id)? deleteTask,
+    TResult? Function(String query)? searchTasks,
   }) {
     return addTask?.call(context);
   }
@@ -917,6 +931,7 @@ class _$AddTaskImpl implements AddTask {
     TResult Function(BuildContext context)? addTask,
     TResult Function(int id, bool completed)? updateTask,
     TResult Function(int id)? deleteTask,
+    TResult Function(String query)? searchTasks,
     required TResult orElse(),
   }) {
     if (addTask != null) {
@@ -932,6 +947,7 @@ class _$AddTaskImpl implements AddTask {
     required TResult Function(AddTask value) addTask,
     required TResult Function(UpdateTask value) updateTask,
     required TResult Function(DeleteTask value) deleteTask,
+    required TResult Function(SearchTasks value) searchTasks,
   }) {
     return addTask(this);
   }
@@ -943,6 +959,7 @@ class _$AddTaskImpl implements AddTask {
     TResult? Function(AddTask value)? addTask,
     TResult? Function(UpdateTask value)? updateTask,
     TResult? Function(DeleteTask value)? deleteTask,
+    TResult? Function(SearchTasks value)? searchTasks,
   }) {
     return addTask?.call(this);
   }
@@ -954,6 +971,7 @@ class _$AddTaskImpl implements AddTask {
     TResult Function(AddTask value)? addTask,
     TResult Function(UpdateTask value)? updateTask,
     TResult Function(DeleteTask value)? deleteTask,
+    TResult Function(SearchTasks value)? searchTasks,
     required TResult orElse(),
   }) {
     if (addTask != null) {
@@ -1056,6 +1074,7 @@ class _$UpdateTaskImpl implements UpdateTask {
     required TResult Function(BuildContext context) addTask,
     required TResult Function(int id, bool completed) updateTask,
     required TResult Function(int id) deleteTask,
+    required TResult Function(String query) searchTasks,
   }) {
     return updateTask(id, completed);
   }
@@ -1067,6 +1086,7 @@ class _$UpdateTaskImpl implements UpdateTask {
     TResult? Function(BuildContext context)? addTask,
     TResult? Function(int id, bool completed)? updateTask,
     TResult? Function(int id)? deleteTask,
+    TResult? Function(String query)? searchTasks,
   }) {
     return updateTask?.call(id, completed);
   }
@@ -1078,6 +1098,7 @@ class _$UpdateTaskImpl implements UpdateTask {
     TResult Function(BuildContext context)? addTask,
     TResult Function(int id, bool completed)? updateTask,
     TResult Function(int id)? deleteTask,
+    TResult Function(String query)? searchTasks,
     required TResult orElse(),
   }) {
     if (updateTask != null) {
@@ -1093,6 +1114,7 @@ class _$UpdateTaskImpl implements UpdateTask {
     required TResult Function(AddTask value) addTask,
     required TResult Function(UpdateTask value) updateTask,
     required TResult Function(DeleteTask value) deleteTask,
+    required TResult Function(SearchTasks value) searchTasks,
   }) {
     return updateTask(this);
   }
@@ -1104,6 +1126,7 @@ class _$UpdateTaskImpl implements UpdateTask {
     TResult? Function(AddTask value)? addTask,
     TResult? Function(UpdateTask value)? updateTask,
     TResult? Function(DeleteTask value)? deleteTask,
+    TResult? Function(SearchTasks value)? searchTasks,
   }) {
     return updateTask?.call(this);
   }
@@ -1115,6 +1138,7 @@ class _$UpdateTaskImpl implements UpdateTask {
     TResult Function(AddTask value)? addTask,
     TResult Function(UpdateTask value)? updateTask,
     TResult Function(DeleteTask value)? deleteTask,
+    TResult Function(SearchTasks value)? searchTasks,
     required TResult orElse(),
   }) {
     if (updateTask != null) {
@@ -1210,6 +1234,7 @@ class _$DeleteTaskImpl implements DeleteTask {
     required TResult Function(BuildContext context) addTask,
     required TResult Function(int id, bool completed) updateTask,
     required TResult Function(int id) deleteTask,
+    required TResult Function(String query) searchTasks,
   }) {
     return deleteTask(id);
   }
@@ -1221,6 +1246,7 @@ class _$DeleteTaskImpl implements DeleteTask {
     TResult? Function(BuildContext context)? addTask,
     TResult? Function(int id, bool completed)? updateTask,
     TResult? Function(int id)? deleteTask,
+    TResult? Function(String query)? searchTasks,
   }) {
     return deleteTask?.call(id);
   }
@@ -1232,6 +1258,7 @@ class _$DeleteTaskImpl implements DeleteTask {
     TResult Function(BuildContext context)? addTask,
     TResult Function(int id, bool completed)? updateTask,
     TResult Function(int id)? deleteTask,
+    TResult Function(String query)? searchTasks,
     required TResult orElse(),
   }) {
     if (deleteTask != null) {
@@ -1247,6 +1274,7 @@ class _$DeleteTaskImpl implements DeleteTask {
     required TResult Function(AddTask value) addTask,
     required TResult Function(UpdateTask value) updateTask,
     required TResult Function(DeleteTask value) deleteTask,
+    required TResult Function(SearchTasks value) searchTasks,
   }) {
     return deleteTask(this);
   }
@@ -1258,6 +1286,7 @@ class _$DeleteTaskImpl implements DeleteTask {
     TResult? Function(AddTask value)? addTask,
     TResult? Function(UpdateTask value)? updateTask,
     TResult? Function(DeleteTask value)? deleteTask,
+    TResult? Function(SearchTasks value)? searchTasks,
   }) {
     return deleteTask?.call(this);
   }
@@ -1269,6 +1298,7 @@ class _$DeleteTaskImpl implements DeleteTask {
     TResult Function(AddTask value)? addTask,
     TResult Function(UpdateTask value)? updateTask,
     TResult Function(DeleteTask value)? deleteTask,
+    TResult Function(SearchTasks value)? searchTasks,
     required TResult orElse(),
   }) {
     if (deleteTask != null) {
@@ -1287,5 +1317,163 @@ abstract class DeleteTask implements TaskEvent {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DeleteTaskImplCopyWith<_$DeleteTaskImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$SearchTasksImplCopyWith<$Res> {
+  factory _$$SearchTasksImplCopyWith(
+          _$SearchTasksImpl value, $Res Function(_$SearchTasksImpl) then) =
+      __$$SearchTasksImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String query});
+}
+
+/// @nodoc
+class __$$SearchTasksImplCopyWithImpl<$Res>
+    extends _$TaskEventCopyWithImpl<$Res, _$SearchTasksImpl>
+    implements _$$SearchTasksImplCopyWith<$Res> {
+  __$$SearchTasksImplCopyWithImpl(
+      _$SearchTasksImpl _value, $Res Function(_$SearchTasksImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TaskEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? query = null,
+  }) {
+    return _then(_$SearchTasksImpl(
+      null == query
+          ? _value.query
+          : query // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SearchTasksImpl implements SearchTasks {
+  const _$SearchTasksImpl(this.query);
+
+  @override
+  final String query;
+
+  @override
+  String toString() {
+    return 'TaskEvent.searchTasks(query: $query)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SearchTasksImpl &&
+            (identical(other.query, query) || other.query == query));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, query);
+
+  /// Create a copy of TaskEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SearchTasksImplCopyWith<_$SearchTasksImpl> get copyWith =>
+      __$$SearchTasksImplCopyWithImpl<_$SearchTasksImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() fetchTasks,
+    required TResult Function(BuildContext context) addTask,
+    required TResult Function(int id, bool completed) updateTask,
+    required TResult Function(int id) deleteTask,
+    required TResult Function(String query) searchTasks,
+  }) {
+    return searchTasks(query);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? fetchTasks,
+    TResult? Function(BuildContext context)? addTask,
+    TResult? Function(int id, bool completed)? updateTask,
+    TResult? Function(int id)? deleteTask,
+    TResult? Function(String query)? searchTasks,
+  }) {
+    return searchTasks?.call(query);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? fetchTasks,
+    TResult Function(BuildContext context)? addTask,
+    TResult Function(int id, bool completed)? updateTask,
+    TResult Function(int id)? deleteTask,
+    TResult Function(String query)? searchTasks,
+    required TResult orElse(),
+  }) {
+    if (searchTasks != null) {
+      return searchTasks(query);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FetchTasks value) fetchTasks,
+    required TResult Function(AddTask value) addTask,
+    required TResult Function(UpdateTask value) updateTask,
+    required TResult Function(DeleteTask value) deleteTask,
+    required TResult Function(SearchTasks value) searchTasks,
+  }) {
+    return searchTasks(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FetchTasks value)? fetchTasks,
+    TResult? Function(AddTask value)? addTask,
+    TResult? Function(UpdateTask value)? updateTask,
+    TResult? Function(DeleteTask value)? deleteTask,
+    TResult? Function(SearchTasks value)? searchTasks,
+  }) {
+    return searchTasks?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FetchTasks value)? fetchTasks,
+    TResult Function(AddTask value)? addTask,
+    TResult Function(UpdateTask value)? updateTask,
+    TResult Function(DeleteTask value)? deleteTask,
+    TResult Function(SearchTasks value)? searchTasks,
+    required TResult orElse(),
+  }) {
+    if (searchTasks != null) {
+      return searchTasks(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class SearchTasks implements TaskEvent {
+  const factory SearchTasks(final String query) = _$SearchTasksImpl;
+
+  String get query;
+
+  /// Create a copy of TaskEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SearchTasksImplCopyWith<_$SearchTasksImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
