@@ -23,55 +23,56 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final TextEditingController controller = TextEditingController();
   final TextEditingController searchController = TextEditingController();
   final SharedPreferencesService sharedPreferencesService;
+
   List<TaskEntity> _allTasks = [];
+  String _currentSearchQuery = '';
+
   TaskBloc(
     this.getTasks,
     this.addTask,
     this.updateTask,
     this.deleteTask,
     this.sharedPreferencesService,
-    // this.sharedPreferencesService
   ) : super(const TaskState.initial()) {
     on<FetchTasks>(_onFetchTasks);
     on<AddTask>(_onAddTask);
     on<UpdateTask>(_onUpdateTask);
     on<DeleteTask>(_onDeleteTask);
     on<SearchTasks>(_onSearchTasks);
+
     searchController.addListener(() {
       add(SearchTasks(searchController.text));
     });
   }
+
   Future<void> _onFetchTasks(FetchTasks event, Emitter<TaskState> emit) async {
     emit(const TaskState.taskLoading());
     try {
       final cachedTasks = await sharedPreferencesService.getTasks();
       if (cachedTasks.isNotEmpty) {
         _allTasks = cachedTasks.map((task) => task.toEntity()).toList();
-        emit(TaskState.taskLoaded(
-            cachedTasks.map((task) => task.toEntity()).toList()));
+        emit(TaskState.taskLoaded(_allTasks));
       } else {
         final tasksFromServer = await getTasks();
         _allTasks = tasksFromServer;
-        emit(TaskState.taskLoaded(tasksFromServer));
+        emit(TaskState.taskLoaded(_allTasks));
         await sharedPreferencesService.saveTasks(tasksFromServer);
       }
     } catch (e) {
       log(e.toString());
-
       emit(TaskState.taskFailure(e.toString()));
     }
   }
 
   Future<void> _onAddTask(AddTask event, Emitter<TaskState> emit) async {
     if (state is TaskLoaded) {
-      //final currentTasks = (state as TaskLoaded).tasks;
       try {
         final newTask = await addTask(controller.text, false);
         _allTasks = List<TaskEntity>.from(_allTasks)..add(newTask);
 
-        //final updatedTasks = List<TaskEntity>.from(currentTasks)..add(newTask);
+        // Update state based on current search query
+        _updateDisplayedTasks(emit);
 
-        emit(TaskState.taskLoaded(_allTasks));
         await sharedPreferencesService.saveTasks(_allTasks);
 
         controller.clear();
@@ -91,11 +92,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   Future<void> _onUpdateTask(UpdateTask event, Emitter<TaskState> emit) async {
     if (state is TaskLoaded) {
       try {
-        // final updatedTasks = (state as TaskLoaded).tasks.map((task) {
-        //   if (task.id == event.id) {
-        //     return task.copyWith(completed: event.completed);
-        //   }
-        //   return task;
         _allTasks = _allTasks.map((task) {
           if (task.id == event.id) {
             return task.copyWith(completed: event.completed);
@@ -103,7 +99,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           return task;
         }).toList();
 
-        emit(TaskState.taskLoaded(_allTasks));
+        _updateDisplayedTasks(emit);
+
         await sharedPreferencesService.saveTasks(_allTasks);
 
         await updateTask(event.id, event.completed);
@@ -122,12 +119,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       try {
         _allTasks = _allTasks.where((task) => task.id != event.id).toList();
 
-        // final updatedTasks = (state as TaskLoaded)
-        //     .tasks
-        //     .where((task) => task.id != event.id)
-        //     .toList();
-
-        emit(TaskState.taskLoaded(_allTasks));
+        // Update state based on current search query
+        _updateDisplayedTasks(emit);
 
         await sharedPreferencesService.saveTasks(_allTasks);
         await deleteTask(event.id);
@@ -143,29 +136,28 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
   void _onSearchTasks(SearchTasks event, Emitter<TaskState> emit) async {
     if (state is TaskLoaded) {
-      // final currentTasks = (state as TaskLoaded).tasks;
-      // final query = event.query.toLowerCase();
-      // if (query.isEmpty) {
-      //   add(const FetchTasks());
-      //   return;
-      // }
-      // final filteredTasks = currentTasks
-      //     .where((task) => task.todo.toLowerCase().contains(query))
-      //     .toList();
-
-      // emit(TaskState.taskLoaded(filteredTasks));
       try {
-        // Always get the full list from SharedPreferences
-        final query = event.query.toLowerCase();
-        final filteredTasks = _allTasks
-            .where((task) => task.todo.toLowerCase().contains(query))
-            .toList();
+        // Update the current search query
+        _currentSearchQuery = event.query.toLowerCase();
 
-        // Emit filtered list for display
-        emit(TaskState.taskLoaded(filteredTasks));
+        // Update state based on current search query
+        _updateDisplayedTasks(emit);
       } catch (e) {
         emit(TaskState.taskFailure('Error filtering tasks: ${e.toString()}'));
       }
+    }
+  }
+
+  void _updateDisplayedTasks(Emitter<TaskState> emit) {
+    if (_currentSearchQuery.isEmpty) {
+      emit(TaskState.taskLoaded(_allTasks));
+    } else {
+      final filteredTasks = _allTasks
+          .where(
+              (task) => task.todo.toLowerCase().contains(_currentSearchQuery))
+          .toList();
+
+      emit(TaskState.taskLoaded(filteredTasks));
     }
   }
 }
