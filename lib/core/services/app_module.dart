@@ -19,4 +19,13 @@ abstract class RegisterModule {
   ApiService get apiService => ApiService(dio);
   @singleton
   TaskRepositoryImpl get taskRepositoryImpl => TaskRepositoryImpl(apiService);
+
+  // @singleton
+  // TaskBloc get taskBloc => TaskBloc(
+  //       getIt<GetTasksUseCase>(),
+  //       getIt<AddTaskUseCase>(),
+  //       getIt<UpdateTaskUseCase>(),
+  //       getIt<DeleteTaskUseCase>(),
+  //       getIt<SharedPreferencesService>(),
+  //     );
 }

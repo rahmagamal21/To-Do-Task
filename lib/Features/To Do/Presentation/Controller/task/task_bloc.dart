@@ -19,8 +19,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final UpdateTaskUseCase updateTask;
   final DeleteTaskUseCase deleteTask;
   final TextEditingController controller = TextEditingController();
-  TaskBloc(this.getTasks, this.addTask, this.updateTask, this.deleteTask)
-      : super(const TaskState.initial()) {
+  // final SharedPreferencesService sharedPreferencesService;
+  TaskBloc(
+    this.getTasks,
+    this.addTask,
+    this.updateTask,
+    this.deleteTask,
+    // this.sharedPreferencesService
+  ) : super(const TaskState.initial()) {
     on<FetchTasks>(_onFetchTasks);
     on<AddTask>(_onAddTask);
     on<UpdateTask>(_onUpdateTask);
@@ -31,6 +37,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     try {
       final tasks = await getTasks();
       emit(TaskState.taskLoaded(tasks));
+      // final tasksFromCache = await sharedPreferencesService.getTasks();
+      // if (tasksFromCache.isNotEmpty) {
+      //   emit(TaskState.taskLoaded(tasksFromCache));
+      // } else {
+      //   final tasksFromServer = await getTasks();
+      //   emit(TaskState.taskLoaded(tasksFromServer));
+      //   await sharedPreferencesService.saveTasks(tasksFromServer);
+      // }
     } catch (e) {
       emit(TaskState.taskFailure(e.toString()));
       log(e.toString());
@@ -44,6 +58,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         final newTask = await addTask(controller.text, false);
 
         final updatedTasks = List<TaskEntity>.from(currentTasks)..add(newTask);
+        // await sharedPreferencesService.saveTasks(updatedTasks);
 
         emit(TaskState.taskLoaded(updatedTasks));
 
@@ -64,9 +79,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   Future<void> _onUpdateTask(UpdateTask event, Emitter<TaskState> emit) async {
     if (state is TaskLoaded) {
       try {
-      
         await updateTask(event.id, event.completed);
-
 
         final updatedTasks = (state as TaskLoaded).tasks.map((task) {
           if (task.id == event.id) {
@@ -74,6 +87,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
           }
           return task;
         }).toList();
+        //check
+        // await sharedPreferencesService.saveTasks(updatedTasks);
         log("Updated Tasks: $updatedTasks");
         emit(TaskState.taskLoaded(updatedTasks));
       } catch (e) {
@@ -90,6 +105,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
             .tasks
             .where((task) => task.id != event.id)
             .toList();
+        // await sharedPreferencesService.saveTasks(updatedTasks);
 
         emit(TaskState.taskLoaded(updatedTasks));
       } catch (e) {

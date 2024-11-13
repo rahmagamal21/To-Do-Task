@@ -7,6 +7,7 @@ import 'Features/To Do/Presentation/Views/home_screen.dart';
 import 'core/services/injectable_config.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   configureDependencies();
   runApp(const MyApp());
 }
